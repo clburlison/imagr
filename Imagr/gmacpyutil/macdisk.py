@@ -177,14 +177,22 @@ class Disk(object):
     """Sets this disk to be the startup disk."""
     self.Refresh()
     # pylint: disable=no-member
+    import syslog
+    syslog.syslog(syslog.LOG_ERR, "Imagr - We're inside the matrix")
     if not self.Mounted():
+      msg=("Imagr - Device ID, %s" % str(self.deviceidentifier))
+      syslog.syslog(syslog.LOG_ERR, msg)
       command = ["/usr/sbin/bless", "--device", self.deviceidentifier,
                  "--setBoot"]
     else:
+      msg=("Imagr - MountPoint, %s" % str(self.mountpoint))
+      syslog.syslog(syslog.LOG_ERR, msg)
       command = ["/usr/sbin/bless", "--mount", self.mountpoint, "--setBoot"]
     rc = gmacpyutil.RunProcess(command)[2]
     if rc == 0:
       return True
+    else:
+      return False
 
   # TODO(user): methods for: verifyVolume, verifyDisk, repairVolume,
   # repairDisk, verifyPermissions, repairPermissions,

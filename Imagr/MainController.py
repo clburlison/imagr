@@ -1213,11 +1213,16 @@ class MainController(NSObject):
         # set the startup disk to the restored volume
         if self.blessTarget == True:
             try:
-                self.targetVolume.SetStartupDisk()
+                NSLog("Our blessTarget Value is: %@", self.blessTarget)
+                (output, command) = self.targetVolume.SetStartupDisk()
+                NSLog("Output from bless is: %@", output)
             except:
                 for volume in self.volumes:
                     if str(volume.mountpoint) == str(self.targetVolume):
                         volume.SetStartupDisk()
+        
+        NSLog("We're done with our blessing at this point in time. We will sleep for 120 seconds.")
+        time.sleep(120)
 
         if self.restartAction == 'restart':
             cmd = ['/sbin/reboot']
