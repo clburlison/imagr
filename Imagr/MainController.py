@@ -790,6 +790,14 @@ class MainController(NSObject):
 
         # Bless the target if we need to
         if self.blessTarget == True:
+            # Hacky work around for `bless` tool not working in AutoImagrNBI due to
+            # https://github.com/macmule/AutoImagrNBI/issues/22
+            systemsetup = '/usr/sbin/systemsetup'
+            if os.path.isfile(systemsetup):
+                cmd = [systemsetup, '-setstartupdisk', str(self.targetVolume.mountpoint)]
+                proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # We now bless the target for all other NBI tools and do it a second
+            # time for AutoImagrNBI even though it doesn't do anything.
             try:
                 self.targetVolume.SetStartupDisk()
             except:
